@@ -2,13 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateFolder;
 use App\Folder;
 use Illuminate\Http\Request;
 
 class FolderController extends Controller
 {
-    public function showCreateForm(Request $request)
+    public function showCreateForm()
     {
         return view('folders/create');
+    }
+
+    public function create(CreateFolder $request)
+    {
+        // フォルダモデルのインスタンスを作成する
+        $folder = new Folder();
+        // $request->old('title');
+        // タイトルに入力値を代入する
+        $folder->title = $request->title;
+        // インスタンスの状態をデータベースに書き込む
+        $folder->save();
+
+        return redirect()->route('tasks.index', [
+            'id' => $folder->id,
+        ]);
     }
 }
